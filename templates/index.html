@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+  <title>Whisper Video Subtitle Flask-Dropzone : Large File</title>
+  {{ dropzone.load_css() }}
+  <!-- {{ dropzone.style('border: 5px dotted #0087F7;
+    margin: 10%;
+     min-height: 200px;') }} -->
+    <style>
+      *{
+        background-color:black;
+      }
+      .dropzone {
+          
+          border: 5px dotted #0087F7;
+          border-radius: .5rem;
+          margin-top: 2rem;
+          margin-right: 100rem;
+          margin-left:  1rem; 
+          min-height: 10rem;
+          max-height: 15rem;
+          width: 27rem;
+          height: 10rem;
+          
+          background-color:grey;
+          border:  dotted darkblue;
+    /* <!-- margin: 10%; --> */
+          
+      }
+      section{
+        align-items: center;
+      }
+        
+     
+       textarea{ 
+        
+        color: wheat;
+        background-color: black;
+        font-size: 1rem;
+        
+        border-radius: 0.5rem;
+        border-style: hidden;
+        /* border-block-color: calc(#000); */
+        
+        margin-top: -20rem; 
+        /* margin-right: 100rem; */
+        margin-left:  30rem; 
+        /* min-height: 10rem; */
+        /* max-height: 15rem; */
+        /* width: 20rem; */
+        
+        /* margin-top: -10rem;
+        margin-left: 25rem;
+        /* margin-right: 1rem; */
+        max-width: 70rem;
+        /* min-height: 10rem;  */
+        height: 11rem;
+        /* max-height: 15rem; */
+      }
+      
+       button {
+        /* background-color: green;
+        border-radius: .25rem;
+        border-style: dotted  ;
+        border-color: black;
+        min-height: 1.5rem;
+        min-width: 4rem;
+        margin-top: 1rem;
+        margin-left: .1rem; */
+
+        /* margin-top: 1rem; */
+        font-family: arial;
+        color: #14396A !important;
+        font-size: 13px;
+        /* text-shadow: 1px 1px 0px #7CACDE; */
+        /* box-shadow: 1px 1px 1px #BEE2F9; */
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: 2px solid #3866A3;
+        background: #63B8EE;
+        /* background: linear-gradient(to top, #63B8EE, #468CCF); */
+
+        /* margin-right: .1rem; */
+
+          /* justify-content: center;
+          align-items: center;
+          align-self: center; */
+          animation: loading-fade 2s 1 linear both ;
+      }
+      button:hover {
+        color: #14396A !important;
+        background: #468CCF;
+        
+        
+        
+        
+      }
+   
+      
+
+
+
+
+     
+      button.show-loading
+      {
+        animation: loading-fade .4s 1 linear both infinite;
+      }
+
+      button.hide-loading
+      {
+        animation: loading-fade .4s 1 linear both infinite;
+        animation-direction: reverse;
+      }
+
+      @keyframes loading-fade
+      {
+        0%
+        {  opacity: 0;
+          
+        }
+        50%
+        {  opacity: .5;}
+        100%
+        {  opacity: 1;  }
+      }
+
+        
+      
+  </style>
+</head>
+<body>
+  
+  <div>
+    <!-- <span> -->
+    {{ dropzone.create(action='upload') }}
+    {{ dropzone.load_js() }}
+    {{ dropzone.config() }}
+  
+    <textarea id="log" rows="10" cols="80" autofocus></textarea>
+    <!-- </span> -->
+  </div>
+  
+
+  <div id="devButton" class="button">
+  
+    <button class="button" id="mkv_fa_en">
+      <a href={{url_for('mkv_en_fa')}}>mkv_en_fa</a>
+    </button>
+    <button class="button" onclick="mkv_en"  id="mkv_en">
+      <!-- <a href={{ url_for('mkv_en') }}>mkv_en</a> -->
+      <a href={{url_for('mkv_en')}}>mkv_en</a>
+    </button>
+    <button class="button" id="mkv_en_glue">
+      <a href={{url_for('mkv_en_encoded')}}>mkv_en_encoded</a>
+    </button>
+    <button class="button" id="en_srt">
+      <a href={{url_for('srt_en')}}>en_srt</a>
+    </button>
+    <button class="button" id="fa_srt">
+      <a href={{url_for('srt_fa')}}>fa_srt</a>
+    </button>
+  
+  </div>
+   
+     
+    
+</body>
+<script>
+
+
+  function testHidden() {
+      var nodes = document.getElementById("devButton").getElementsByTagName('*');
+      for (var i = 0; i < nodes.length; i++) {
+        nodes[i].style.visibility = "hidden";
+      }
+       
+    }
+    function testVisiable() {
+      var nodes = document.getElementById("devButton").getElementsByTagName('*');
+      for (var i = 0; i < nodes.length; i++) {
+        nodes[i].style.visibility = "visible";
+      }
+    }
+    function mkv_en(){
+      // fetch("/mkv_en")
+      //   .then(res=>{
+      //       return res.blob;
+      //   }).then(blob=>{
+      //       console.log("clicked on mkv_en")
+      //   }).catch(err=>console.log(err));
+
+    fetch("/mkv_en")
+    .then(res => res.blob())
+    .then(data => {
+      var a = document.createElement("a");
+      a.href = window.URL.createObjectURL(data);
+      // a.download = "video_subbed_en.mkv";
+      a.click();
+    }); 
+
+    }
+       
+
+
+
+        async function test() {
+          var isdone = false;
+          const response = await fetch("/done")
+          const data = await response.json()
+          var isdone = Boolean(data["isdone"])
+          var textarea = document.getElementById("log")
+          textarea.scrollTop = textarea.scrollHeight;
+          if (!isdone) {
+            textarea.innerHTML += "done value from test if  = " + isdone + "\n";
+            testHidden()
+          } else {
+            textarea.innerHTML += "done value from test else = " + isdone + "\n";
+            testVisiable()
+            
+          }
+
+        }
+        
+        // setInterval(test,5000);
+
+
+
+
+        function log(){
+          var isdone = false;
+          var textarea = document.getElementById("log")
+          textarea.scrollTop = textarea.scrollHeight;
+          var socket = io.connect('http://localhost:5000');
+           socket.on('connect', function() {
+              socket.emit('connected');
+           });
+           socket.on('isdone', function(data) {
+            
+              console.log(data['isdone']);
+              textarea.innerHTML += data['isdone'] + "\n"
+              // console.log("suppose to be somthing")
+              
+              var isdone = Boolean(data['isdone'])
+              if (!isdone) {
+                textarea.innerHTML += "done value from log if  = " + isdone + "\n";
+                testHidden()
+              } else {
+                textarea.innerHTML += "done value from log else = " + isdone + "\n";
+                testVisiable()
+            
+              }
+           });
+
+          socket.on('log',function(data){
+            console.log(data['log']);
+            textarea.innerHTML += data['log'] + "\n"
+            textarea.scrollTop = textarea.scrollHeight;
+
+          });
+
+
+        }
+        log();
+
+        console.log("supoosr to be somthiong")
+        // test()
+        
+
+// setInterval(isDone, 3000);
+
+</script>
+</html>
+
+
+<!-- ========================================================================== -->
+<!-- ========================================================================== -->
+<!-- ========================================================================== -->
+<!-- ========================================================================== -->
+<!-- ========================================================================== -->
+
+
+
+
+<!-- function isDone() {
+  testHidden()
+  
+  fetch("/done")
+    .then(response => response.json())
+    .then(data => {
+      // data is a parsed JSON object
+      var isdone = data["isdone"]
+      var textarea = document.getElementById("log")
+      textarea.scrollTop = textarea.scrollHeight;
+      if (!isdone) {
+        // testHidden();
+        textarea.innerHTML += "done value from if = " + isdone + "\n";
+        // var nodes = document.getElementById("devButton").getElementsByTagName('*');
+        // for (var i = 0; i < nodes.length; i++) {
+        //   nodes[i].style.visibility = "hidden";
+        // }
+
+      } else {
+        testVisiable();
+        textarea.innerHTML += "done value from else = " + isdone + "\n";
+        // var nodes = document.getElementById("devButton").getElementsByTagName('*');
+        // for (var i = 0; i < nodes.length; i++) {
+        //   nodes[i].style.visibility = "visiable";
+        // }
+      }
+    })
+    return Boolean(isdone)
+} -->

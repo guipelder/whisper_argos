@@ -1,0 +1,9 @@
+flask
+ffmpeg-python
+transformers==4.25.1
+soundfile==0.11.0
+auditok==0.2.0
+argostranslate
+pathlib
+flask_dropzone
+flask-socketio
