@@ -1,0 +1,133 @@
+
+inside functions
+using base model
+clinet connected
+the operation is done.
+cleaning temp 
+cleaning download files
+extracting audio
+segmentainon of audio
+a-> 0000.050 b-> 0007.050
+a-> 0007.050 b-> 0013.973
+getting english subs 
+ Igor, did you get the body? Yes, Master. You know what to do. 
+[0.05, 7.05] 
+creating the srt lines
+limits[0]-> 0.05
+limits -> 0:00:00.050000
+ It's a five! A five! 
+[7.05, 13.973] 
+creating the srt lines
+limits[0]-> 7.05
+limits -> 0:00:07.050000
+translating from english to  farsi subs ... 
+0
+ 
+00:00:00,05 --> 00:00:07,05
+ 
+ایگور، بدن را گرفتی؟ بله، استاد شما می دانید چه باید بکنید. 
+
+ 
+1
+ 
+00:00:07,05 --> 00:00:13,97
+ 
+پنج است! پنج! 
+
+ 
+translating from english to  french subs ... 
+0
+ 
+00:00:00,05 --> 00:00:07,05
+ 
+Igor, tu as eu le corps ? Oui, Maître. Tu sais quoi faire. 
+
+ 
+1
+ 
+00:00:07,05 --> 00:00:13,97
+ 
+C'est cinq ! Cinq ! 
+
+ 
+translating from english to  spanish subs ... 
+0
+ 
+00:00:00,05 --> 00:00:07,05
+ 
+Igor, ¿tienes el cuerpo? Sí, amo. Sabes qué hacer. 
+
+ 
+1
+ 
+00:00:07,05 --> 00:00:13,97
+ 
+¡Son cinco! ¡Un cinco! 
+
+ 
+translating from english to  german subs ... 
+0
+ 
+00:00:00,05 --> 00:00:07,05
+ 
+Igor, hat Sie den Körper bekommen? Ja, Master. Sie wissen, was zu tun ist. 
+
+ 
+1
+ 
+00:00:07,05 --> 00:00:13,97
+ 
+Es ist ein Fünftel! Ein Fünftel! 
+
+ 
+translating from english to  russian subs ... 
+0
+ 
+00:00:00,05 --> 00:00:07,05
+ 
+Игорь, ты получил тело? Да, господин. Ты знаешь, что делать. 
+
+ 
+1
+ 
+00:00:07,05 --> 00:00:13,97
+ 
+Пять! Пять! 
+
+ 
+translating from english to  japenease subs ... 
+0
+ 
+00:00:00,05 --> 00:00:07,05
+ 
+体を手に入れたの? はい、マスター。 お問い合わせ 
+
+ 
+1
+ 
+00:00:07,05 --> 00:00:13,97
+ 
+5つ! 5人で! 
+
+ 
+translating from english to  chinese subs ... 
+0
+ 
+00:00:00,05 --> 00:00:07,05
+ 
+Igor, 你是否能获得机构? 是,硕士。 你知道做什么。 
+
+ 
+1
+ 
+00:00:07,05 --> 00:00:13,97
+ 
+它的五! 页:1 
+
+ 
+creating hardcoded english-subbed mkv file 
+creating mkv file with english sub 
+creating mkv file with farsi sub 
+combining all subtitles 
+the operation is done.
+cleaning uploaded files

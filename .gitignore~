@@ -175,7 +175,6 @@ temp/*.wav
 *mp3
 *mkv
 *srt
-*swp
 
 /argos_packages_offline/temp/*
 /argos_packages_offline/*.argosmodel

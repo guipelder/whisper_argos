@@ -5,163 +5,80 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
   <title>Whisper Video Subtitle Flask-Dropzone : Large File</title>
   {{ dropzone.load_css() }}
-  <!-- {{ dropzone.style('border: 5px dotted #0087F7;
-    margin: 10%;
-     min-height: 200px;') }} -->
-    <style>
-      *{
-        background-color:black;
-      }
-      .dropzone {
-          
-          border: 5px dotted #0087F7;
-          border-radius: .5rem;
-          margin-top: 2rem;
-          margin-right: 100rem;
-          margin-left:  1rem; 
-          min-height: 10rem;
-          max-height: 15rem;
-          width: 27rem;
-          height: 10rem;
-          
-          background-color:grey;
-          border:  dotted darkblue;
-    /* <!-- margin: 10%; --> */
-          
-      }
-      section{
-        align-items: center;
-      }
-        
-     
-       textarea{ 
-        
-        color: wheat;
-        background-color: black;
-        font-size: 1rem;
-        
-        border-radius: 0.5rem;
-        border-style: hidden;
-        /* border-block-color: calc(#000); */
-        
-        margin-top: -20rem; 
-        /* margin-right: 100rem; */
-        margin-left:  30rem; 
-        /* min-height: 10rem; */
-        /* max-height: 15rem; */
-        /* width: 20rem; */
-        
-        /* margin-top: -10rem;
-        margin-left: 25rem;
-        /* margin-right: 1rem; */
-        max-width: 70rem;
-        /* min-height: 10rem;  */
-        height: 11rem;
-        /* max-height: 15rem; */
-      }
-      
-       button {
-        /* background-color: green;
-        border-radius: .25rem;
-        border-style: dotted  ;
-        border-color: black;
-        min-height: 1.5rem;
-        min-width: 4rem;
-        margin-top: 1rem;
-        margin-left: .1rem; */
-
-        /* margin-top: 1rem; */
-        font-family: arial;
-        color: #14396A !important;
-        font-size: 13px;
-        /* text-shadow: 1px 1px 0px #7CACDE; */
-        /* box-shadow: 1px 1px 1px #BEE2F9; */
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        border: 2px solid #3866A3;
-        background: #63B8EE;
-        /* background: linear-gradient(to top, #63B8EE, #468CCF); */
-
-        /* margin-right: .1rem; */
-
-          /* justify-content: center;
-          align-items: center;
-          align-self: center; */
-          animation: loading-fade 2s 1 linear both ;
-      }
-      button:hover {
-        color: #14396A !important;
-        background: #468CCF;
-        
-        
-        
-        
-      }
-   
-      
-
-
-
-
-     
-      button.show-loading
-      {
-        animation: loading-fade .4s 1 linear both infinite;
-      }
-
-      button.hide-loading
-      {
-        animation: loading-fade .4s 1 linear both infinite;
-        animation-direction: reverse;
-      }
-
-      @keyframes loading-fade
-      {
-        0%
-        {  opacity: 0;
-          
-        }
-        50%
-        {  opacity: .5;}
-        100%
-        {  opacity: 1;  }
-      }
-
-        
-      
-  </style>
+    
 </head>
 <body>
   
-  <div>
-    <!-- <span> -->
-    {{ dropzone.create(action='upload') }}
-    {{ dropzone.load_js() }}
-    {{ dropzone.config() }}
-  
-    <textarea id="log" rows="10" cols="80" autofocus></textarea>
-    <!-- </span> -->
-  </div>
-  
+  <div id = "top">
+      <div>
+    
+        {{ dropzone.load_css() }}
+        
+        {{ dropzone.create(action='upload') }}
+        {{ dropzone.load_js() }}
+        {{ dropzone.config() }}
+        
 
-  <div id="devButton" class="button">
+        
+        <textarea id="log" class="textarea-show" rows="10" cols="80" autofocus></textarea>
+          
+          <label class="switch">
+            <input type="checkbox" onchange="toggleCheckbox(this)" id="2"  >
+            <span class="toggle"></span>
+          </label>
+        </div>
+        
+      </div>
+      
+      
+  <div id="devButton" class="buttons">
+     
+
   
     <button class="button" id="mkv_fa_en">
       <a href={{url_for('mkv_en_fa')}}>mkv_en_fa</a>
     </button>
-    <button class="button" onclick="mkv_en"  id="mkv_en">
-      <!-- <a href={{ url_for('mkv_en') }}>mkv_en</a> -->
+    <!-- <button class="button" onclick="mkv_en"  id="mkv_en"> -->
+      <button class="button"   id="mkv_en">
+
       <a href={{url_for('mkv_en')}}>mkv_en</a>
     </button>
     <button class="button" id="mkv_en_glue">
       <a href={{url_for('mkv_en_encoded')}}>mkv_en_encoded</a>
     </button>
+    <button class="button" id="mkv_all_subs">
+      <a href={{url_for('mkv_all')}}>mkv_all_subs</a>
+    </button>
+
     <button class="button" id="en_srt">
       <a href={{url_for('srt_en')}}>en_srt</a>
     </button>
     <button class="button" id="fa_srt">
       <a href={{url_for('srt_fa')}}>fa_srt</a>
     </button>
+
+    <button class="button" id="fr_srt">
+      <a href={{url_for('srt_fr')}}>fr_srt</a>
+    </button>
+    <button class="button" id="es_srt">
+      <a href={{url_for('srt_es')}}>es_srt</a>
+    </button>
+
+    <button class="button" id="de_srt">
+      <a href={{url_for('srt_de')}}>de_srt</a>
+    </button>
+    <button class="button" id="zh_srt">
+      <a href={{url_for('srt_zh')}}>zh_srt</a>
+    </button>
+    
+    
+    <button class="button" id="ru_srt">
+      <a href={{url_for('srt_ru')}}>ru_srt</a>
+    </button>
+    <button class="button" id="ja_srt">
+      <a href={{url_for('srt_ja')}}>ja_srt</a>
+    </button>
+    
   
   </div>
    
@@ -169,35 +86,44 @@
     
 </body>
 <script>
-
+function toggleCheckbox(element) {
+  var log = document.getElementById("log")
+  if (log.style.visibility == "hidden"){
+    log.style.visibility = "visible"
+  
+  } else 
+  
+  log.style.visibility = "hidden"
+}
 
   function testHidden() {
       var nodes = document.getElementById("devButton").getElementsByTagName('*');
+      document.getElementById("mkv_fa_en").disabled = true;
       for (var i = 0; i < nodes.length; i++) {
-        nodes[i].style.visibility = "hidden";
+        
+        nodes[i].style.opacity = .2;
+
+         
       }
        
     }
     function testVisiable() {
       var nodes = document.getElementById("devButton").getElementsByTagName('*');
+      document.getElementById("mkv_fa_en").disabled = false;
       for (var i = 0; i < nodes.length; i++) {
-        nodes[i].style.visibility = "visible";
+        nodes[i].style.opacity = 1;
+
       }
     }
+
+    // NOT USED
     function mkv_en(){
-      // fetch("/mkv_en")
-      //   .then(res=>{
-      //       return res.blob;
-      //   }).then(blob=>{
-      //       console.log("clicked on mkv_en")
-      //   }).catch(err=>console.log(err));
 
     fetch("/mkv_en")
     .then(res => res.blob())
     .then(data => {
       var a = document.createElement("a");
       a.href = window.URL.createObjectURL(data);
-      // a.download = "video_subbed_en.mkv";
       a.click();
     }); 
 
@@ -206,29 +132,7 @@
 
 
 
-        async function test() {
-          var isdone = false;
-          const response = await fetch("/done")
-          const data = await response.json()
-          var isdone = Boolean(data["isdone"])
-          var textarea = document.getElementById("log")
-          textarea.scrollTop = textarea.scrollHeight;
-          if (!isdone) {
-            textarea.innerHTML += "done value from test if  = " + isdone + "\n";
-            testHidden()
-          } else {
-            textarea.innerHTML += "done value from test else = " + isdone + "\n";
-            testVisiable()
-            
-          }
-
-        }
         
-        // setInterval(test,5000);
-
-
-
-
         function log(){
           var isdone = false;
           var textarea = document.getElementById("log")
@@ -245,10 +149,10 @@
               
               var isdone = Boolean(data['isdone'])
               if (!isdone) {
-                textarea.innerHTML += "done value from log if  = " + isdone + "\n";
+                textarea.innerHTML += "(CLIENT)done value from log if  = " + isdone + "\n";
                 testHidden()
               } else {
-                textarea.innerHTML += "done value from log else = " + isdone + "\n";
+                textarea.innerHTML += "(CLIENT)done value from log else = " + isdone + "\n";
                 testVisiable()
             
               }
@@ -265,11 +169,6 @@
         }
         log();
 
-        console.log("supoosr to be somthiong")
-        // test()
-        
-
-// setInterval(isDone, 3000);
 
 </script>
 </html>
@@ -281,35 +180,189 @@
 <!-- ========================================================================== -->
 <!-- ========================================================================== -->
 
+<style>
+ 
+  html {
+    background-color: #40322580;
+  }
+    
+      .dropzone {
+        display: flex;
+          
+          border: .1rem dotted #aed7f8;
+          border-radius: .5rem;
+          /* padding: 1rem; */
+          /* margin-right: 100rem; */
+          box-shadow: .2rem .2rem .2rem  rgb(115, 169, 192), -0.2rem -0.2rem .2rem  rgb(187, 129, 121);
+          font-family: monospace;
+          font-size: 1.25rem;
+          margin-top: 2rem;
+          margin-left:  1rem; 
+          margin-bottom: 1rem;
+          min-height: 15rem;
+          /* max-height: 15rem; */
+          width: 25rem;
+          height: 20.5rem;
 
-
-
-<!-- function isDone() {
-  testHidden()
-  
-  fetch("/done")
-    .then(response => response.json())
-    .then(data => {
-      // data is a parsed JSON object
-      var isdone = data["isdone"]
-      var textarea = document.getElementById("log")
-      textarea.scrollTop = textarea.scrollHeight;
-      if (!isdone) {
-        // testHidden();
-        textarea.innerHTML += "done value from if = " + isdone + "\n";
-        // var nodes = document.getElementById("devButton").getElementsByTagName('*');
-        // for (var i = 0; i < nodes.length; i++) {
-        //   nodes[i].style.visibility = "hidden";
-        // }
-
-      } else {
-        testVisiable();
-        textarea.innerHTML += "done value from else = " + isdone + "\n";
-        // var nodes = document.getElementById("devButton").getElementsByTagName('*');
-        // for (var i = 0; i < nodes.length; i++) {
-        //   nodes[i].style.visibility = "visiable";
-        // }
+          color: #d0ddef;
+          
+          background-color:rgb(59, 58, 58);
+          border:  dotted rgb(196, 196, 255);
+          box-shadow: inset;
+          
       }
-    })
-    return Boolean(isdone)
-} -->
+      .top {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        
+
+      }
+      .top div {
+        margin-bottom: 2rem;
+      }
+      
+        
+     
+       textarea{ 
+        padding: .5rem;
+        color: wheat;
+        margin-left: 28rem;
+        margin-top: -23rem;
+        margin-bottom: 2.5rem;
+        font-family: monospace;
+        background-color: rgb(28, 27, 27);
+        font-size: 1.5rem;
+        box-shadow: .2rem .2rem .2rem  rgb(187, 129, 121), -0.2rem -0.2rem .2rem  rgb(187, 129, 121);
+        
+        border-radius: 0.5rem;
+        border-style: none;
+        max-width: 80rem;
+        min-width: 70rem;
+        height: 20rem;
+        
+      }
+
+      
+      .buttons{
+        display: flex;
+        justify-content: center space-around space-between;
+        align-items: center;
+      
+      }
+      a{
+        color: rgb(226, 213, 213);
+        text-decoration: none;
+      }
+       button {
+        
+        margin-top: 1rem;
+        /* font-family: arial; */
+        /* color: #ffffff ; */
+        
+        background-color: currentColor;
+        
+        
+        font-size: 1rem;
+        /* text-shadow: 1px 1px 0px #7CACDE; */
+        /* box-shadow: 1px 1px 1px #BEE2F9; */
+        padding: 0.5rem 1rem .5rem .5rem;
+        margin: .4rem;
+        border-radius: 0.5rem;
+        /* border: .1rem solid #a4bddd; */
+        background: #623d3d;
+        border-style: none;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: .1rem .1rem .1rem  rgb(108, 81, 75), -0.1rem -0.1rem .1rem rgb(127, 107, 102);
+        box-shadow: inset;
+        /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+        
+
+        
+        /* animation: loading-unfade .5s 1 linear both ; */
+      }
+
+
+      
+
+      button:hover {
+        color: #af7562cd !important;
+        background: #9b9998;
+        /* border-style: dotted; */
+        
+        
+        
+        
+      }
+      a:hover {
+        color: black;
+      }
+      
+
+      
+
+
+
+
+     
+      /* button.show-loading */
+      show-loading
+
+      {
+        animation: loading-unfade .5s .1 linear both ;
+        
+      }
+
+      hide-loading
+      {
+        animation: loading-fade .5s .1 linear both ;
+        
+      }
+
+      @keyframes loading-fade
+      {
+        0%
+        {  opacity: 1;}
+        50%
+        {  opacity: .5;}
+        100%
+        {  opacity: 0;  }
+      }
+
+      @keyframes loading-unfade
+      {
+        0%
+        {  opacity: 0;}
+        50%
+        {  opacity: .5;}
+        100%
+        {  opacity: 1;  }
+      }
+
+    .toggle {position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #b30000; border-radius: .5rem}
+    .toggle:before {
+      position: absolute; content: ""; height: 1rem;
+       width: 1.5rem; left: .2rem; bottom: .2rem;
+        background-color: #000000c7; -webkit-transition: .1s;
+         transition: .1s; border-radius: .3rem}
+
+    .switch {
+      position: relative; display: inline-block;
+       width: 3rem; height: 1.5rem} 
+    .switch input {display: none}
+    input:checked+.toggle {background-color: #ccc}
+    input:checked+.toggle:before {
+      -webkit-transform: translateX(1rem);
+       -ms-transform: translateX(1rem);
+        transform: translateX(1rem)}
+
+    
+
+
+
+        
+      
+  </style>

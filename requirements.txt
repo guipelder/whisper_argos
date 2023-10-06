@@ -7,3 +7,4 @@ argostranslate
 pathlib
 flask_dropzone
 flask-socketio
+

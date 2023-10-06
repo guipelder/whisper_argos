@@ -2,6 +2,7 @@ from transformers import pipeline
 import ffmpeg
 import argostranslate.translate
 
+
 import gc
 import subprocess
 from pathlib import Path
@@ -12,14 +13,23 @@ import re
 import torch
 import datetime
 import os
+# from testwhisper import log_sender
 
 from flask import Flask, render_template, request
 from flask_dropzone import Dropzone
+
 audio_directory = './temp_audio/'
 download_directory = './downloads/'
-audio_directory = './temp_audio/'
+upload_directory = './uploads/'
+
 video = "not changed"
-temp_str=""
+log_file = "log.txt"
+with open(log_file, "w") as log:
+        log.write("\n")
+with open(log_file, "a") as log:
+        log.write("inside functions\n")
+global temp_str
+temp_str  =""
 
 #  extract the audio track from the video and save it as a `.wav` file.
 
@@ -32,6 +42,8 @@ temp_str=""
 def extract_audio(input_file):
     Path(audio_directory).mkdir(parents=True, exist_ok=True)
     audio_file = audio_directory+'/temp.wav'
+    with open(log_file, "a") as log:
+        log.writelines("extracting audio\n")
 #   command = ["ffmpeg", "-i", input_file, "-ac", "1", "-ar", "16000","-vn", "-f", "wav", audio_file]
 #   subprocess.run(command)
     stream=ffmpeg.input(input_file)
@@ -66,9 +78,14 @@ def segment_audio(audio_name):
     energy_threshold=30, # threshold of detection
     sampling_rate=16000
   )
+  with open(log_file, "a") as log:
+        log.writelines("segmentainon of audio\n")
 
   for i, r in enumerate(audio_regions):
     filename = r.save(audio_name[:-4]+f'_{r.meta.start:08.3f}-{r.meta.end:08.3f}.wav')
+    with open(log_file, "a") as log:
+        log.writelines(f"a-> {r.meta.start:08.3f} b-> {r.meta.end:08.3f}\n")
+
 
 
 
@@ -83,13 +100,22 @@ def segment_audio(audio_name):
 # pipe = pipeline("automatic-speech-recognition", model="openai/whisper-base")
 
 def model_select(model_name):
+    """
+    if you want to add your own openai model from hugginface 
+    you need to make sure of the name of folder and add it in another else(elif) 
+    statment
+    """
     if(model_name == 'small'):
+        with open(log_file, "a") as log:
+            log.write("using small model\n")
         return   pipeline("automatic-speech-recognition", model="openai/whisper-small")
     elif(model_name=='base'):
+        with open(log_file, "a") as log:
+            log.write("using base model\n")
         return   pipeline("automatic-speech-recognition", model="openai/whisper-base")
 
 
-
+# base model is the SMALL one in the modeks
 pipe = model_select(model_name='base')
 
 # * `clean_text` - This is just a simple post-processing function to clean the output text from the ASR model with some simple regex.
@@ -109,11 +135,32 @@ def clean_text(text):
   clean_text = re.sub(r'i\'', 'I\'', clean_text)
   return clean_text
 
+
+
 def get_srt_line(inferred_text, line_count, limits):
+  """
+  sample srt line:
+    0 
+    00:00:00,05 --> 00:00:07,05
+    Igor, hat Sie den Körper bekommen? Ja, Master. Sie wissen, was zu tun ist.
+  """
+  with open(log_file, "a") as log:
+    log.writelines("creating the srt lines\n")
   sep = ','   
+  #getting d with the values like 0:00:00.050000   
   d = str(datetime.timedelta(seconds=float(limits[0])))
+
+  with open(log_file, "a") as log:
+        log.writelines(f"limits[0]-> {limits[0]}\n")
+
+        log.writelines(f"limits -> {d}\n")
+        #i.e. limits -> 0:00:00.300000
+
+  
   try:
       from_dur = '0' + str(d.split(".")[0]) + sep + str(d.split(".")[-1][:2])
+      # --->>>    0    0:00:00                 ,           05
+      #00:00:00,05
   except:
       from_dur = '0' + str(d) + sep + '00'
       
@@ -127,9 +174,11 @@ def get_srt_line(inferred_text, line_count, limits):
 def get_subs(audio_directory, output_file):
   segments = sorted([f for f in Path(audio_directory).glob(f'temp_*.wav')])
   line_count = 0
-  global temp_str
-
+  global temp_str 
+  with open(log_file, "a") as log:
+        log.write("getting english subs \n")
   with open(output_file, 'w', encoding="utf-8") as out_file:
+    
     for audio_file in segments:
       # Run OpenAI Whisper inference on each segemented audio file.
       speech, rate = soundfile.read(audio_file) 
@@ -138,18 +187,27 @@ def get_subs(audio_directory, output_file):
 
       if len(inferred_text) > 0:
         inferred_text = clean_text(inferred_text)
-        temp_str += inferred_text + '\n'
+        with open(log_file, "a") as log:
+            log.write(f"{inferred_text} \n")
+        # log_sender(f"{inferred_text} {line_count}")
         print(inferred_text)
       else:
         inferred_text = ''
 
       limits = audio_file.name[:-4].split("_")[-1].split("-")
       limits = [float(limit) for limit in limits]
+      with open(log_file, "a") as log:
+        log.write(f"{limits} \n")
       out_file.write(get_srt_line(inferred_text, line_count, limits))
       out_file.flush()
       line_count += 1
+      
+
 
 def translate_srt_fa( input_file ,output_file):
+            # there are 4 line is srt file and we only need to translate the third line
+            with open(log_file, "a") as log:
+                log.write(f"translating from english to  farsi subs ... \n")
             line_count = 1
             from_code = "en"
             to_code = "fa"
@@ -179,11 +237,17 @@ def translate_srt_fa( input_file ,output_file):
                         print(f"line is: {line}")
                         if ((line_count % 4) == 0 or (line_count % 4) == 1 or (line_count % 4) == 2):
                             translatedText = line
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         elif (line_count % 4 == 3):
                             inferred_text = line
                             print(inferred_text)
                             translatedText = half_list[int((line_count)/4 ) ]
                             print(f"traslated text from english {translatedText}")
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         else:
                             translatedText = ''
                         line_count += 1
@@ -194,6 +258,8 @@ def translate_srt_fa( input_file ,output_file):
 
 #TODO trying to translate from srt_en directly
 def translate_srt_fr( input_file ,output_file):
+            with open(log_file, "a") as log:
+                log.write(f"translating from english to  french subs ... \n")
             line_count = 1
             from_code = "en"
             to_code = "fr"
@@ -218,16 +284,23 @@ def translate_srt_fr( input_file ,output_file):
          
               
                     half_list = half_translate.split('\n')
-                    # print(in_file.read())
+                    
+                    # temp is the filelines()
                     for line in temp:
                         print(f"line is: {line}")
                         if ((line_count % 4) == 0 or (line_count % 4) == 1 or (line_count % 4) == 2):
                             translatedText = line
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         elif (line_count % 4 == 3):
                             inferred_text = line
                             print(inferred_text)
                             translatedText = half_list[int((line_count)/4 ) ]
                             print(f"traslated text from english {translatedText}")
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         else:
                             translatedText = ''
                         line_count += 1
@@ -237,6 +310,8 @@ def translate_srt_fr( input_file ,output_file):
 
 #TODO trying to translate from srt_en directly
 def translate_srt_es( input_file ,output_file):
+            with open(log_file, "a") as log:
+                log.write(f"translating from english to  spanish subs ... \n")
             line_count = 1
             from_code = "en"
             to_code = "es"
@@ -266,11 +341,17 @@ def translate_srt_es( input_file ,output_file):
                         print(f"line is: {line}")
                         if ((line_count % 4) == 0 or (line_count % 4) == 1 or (line_count % 4) == 2):
                             translatedText = line
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         elif (line_count % 4 == 3):
                             inferred_text = line
                             print(inferred_text)
                             translatedText = half_list[int((line_count)/4 ) ]
                             print(f"traslated text from english {translatedText}")
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         else:
                             translatedText = ''
                         line_count += 1
@@ -280,6 +361,8 @@ def translate_srt_es( input_file ,output_file):
 
 #TODO trying to translate from srt_en directly
 def translate_srt_de( input_file ,output_file):
+            with open(log_file, "a") as log:
+                log.write(f"translating from english to  german subs ... \n")
             line_count = 1
             from_code = "en"
             to_code = "de"
@@ -309,11 +392,17 @@ def translate_srt_de( input_file ,output_file):
                         print(f"line is: {line}")
                         if ((line_count % 4) == 0 or (line_count % 4) == 1 or (line_count % 4) == 2):
                             translatedText = line
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         elif (line_count % 4 == 3):
                             inferred_text = line
                             print(inferred_text)
                             translatedText = half_list[int((line_count)/4 ) ]
                             print(f"traslated text from english {translatedText}")
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         else:
                             translatedText = ''
                         line_count += 1
@@ -324,6 +413,8 @@ def translate_srt_de( input_file ,output_file):
 
 #TODO trying to translate from srt_en directly
 def translate_srt_zh( input_file ,output_file):
+            with open(log_file, "a") as log:
+                log.write(f"translating from english to  chinese subs ... \n")
             line_count = 1
             from_code = "en"
             to_code = "zh"
@@ -353,11 +444,17 @@ def translate_srt_zh( input_file ,output_file):
                         print(f"line is: {line}")
                         if ((line_count % 4) == 0 or (line_count % 4) == 1 or (line_count % 4) == 2):
                             translatedText = line
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         elif (line_count % 4 == 3):
                             inferred_text = line
                             print(inferred_text)
                             translatedText = half_list[int((line_count)/4 ) ]
                             print(f"traslated text from english {translatedText}")
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         else:
                             translatedText = ''
                         line_count += 1
@@ -367,6 +464,8 @@ def translate_srt_zh( input_file ,output_file):
 
 #TODO trying to translate from srt_en directly
 def translate_srt_ru( input_file ,output_file):
+            with open(log_file, "a") as log:
+                log.write(f"translating from english to  russian subs ... \n")
             line_count = 1
             from_code = "en"
             to_code = "ru"
@@ -396,11 +495,17 @@ def translate_srt_ru( input_file ,output_file):
                         print(f"line is: {line}")
                         if ((line_count % 4) == 0 or (line_count % 4) == 1 or (line_count % 4) == 2):
                             translatedText = line
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         elif (line_count % 4 == 3):
                             inferred_text = line
                             print(inferred_text)
                             translatedText = half_list[int((line_count)/4 ) ]
                             print(f"traslated text from english {translatedText}")
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         else:
                             translatedText = ''
                         line_count += 1
@@ -410,6 +515,8 @@ def translate_srt_ru( input_file ,output_file):
 
 #TODO trying to translate from srt_en directly
 def translate_srt_ja( input_file ,output_file):
+            with open(log_file, "a") as log:
+                log.write(f"translating from english to  japenease subs ... \n")
             line_count = 1
             from_code = "en"
             to_code = "ja"
@@ -439,11 +546,17 @@ def translate_srt_ja( input_file ,output_file):
                         print(f"line is: {line}")
                         if ((line_count % 4) == 0 or (line_count % 4) == 1 or (line_count % 4) == 2):
                             translatedText = line
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         elif (line_count % 4 == 3):
                             inferred_text = line
                             print(inferred_text)
                             translatedText = half_list[int((line_count)/4 ) ]
                             print(f"traslated text from english {translatedText}")
+                            with open(log_file, "a") as log:
+                                log.write(f"{translatedText} \n")
+
                         else:
                             translatedText = ''
                         line_count += 1
@@ -451,11 +564,111 @@ def translate_srt_ja( input_file ,output_file):
                         out_file.write(translatedText)
                         out_file.flush()
 
+def combine_subtitles_mkv_all(input_file,  subtitle_file1 ,
+                              subtitle_file2, subtitle_file3,
+                              subtitle_file4, subtitle_file5,
+                              subtitle_file6, subtitle_file7 ,
+                              subtitle_file8, output_file):
+    l1="en"
+    t1="English"
+
+    l2="fa"
+    t2="Farsi"
+    
+    l3 = "fr"
+    t3 = "French"
+
+    l4 = "de"
+    t4 = "German"
+    
+    l5= "es"
+    t5= "Spanish"
+    
+    l6= "ru"
+    t6= "Russian"
+    
+    l7= "zh"
+    t7= "Chinease"
+
+    l8= "ja"
+    t8= "japenese"
+
+
+    output_file=output_file
+
+    #Define input values
+    input_ffmpeg = ffmpeg.input(input_file)
+    input_ffmpeg_sub1 = ffmpeg.input(subtitle_file1)
+    input_ffmpeg_sub2 = ffmpeg.input(subtitle_file2)
+    input_ffmpeg_sub3 = ffmpeg.input(subtitle_file3)
+    input_ffmpeg_sub4 = ffmpeg.input(subtitle_file4)
+    input_ffmpeg_sub5 = ffmpeg.input(subtitle_file5)
+    input_ffmpeg_sub6 = ffmpeg.input(subtitle_file6)
+
+    input_ffmpeg_sub7 = ffmpeg.input(subtitle_file7)
+    input_ffmpeg_sub8 = ffmpeg.input(subtitle_file8)
+
+
+
+
+    #Define output file
+    input_video = input_ffmpeg['v']
+    input_audio = input_ffmpeg['a']
+    input_subtitles1 = input_ffmpeg_sub1['s']
+    input_subtitles2 = input_ffmpeg_sub2['s']
+    input_subtitles3 = input_ffmpeg_sub3['s']
+    input_subtitles4 = input_ffmpeg_sub4['s']
+    input_subtitles5 = input_ffmpeg_sub5['s']
+    input_subtitles6 = input_ffmpeg_sub6['s']
+    input_subtitles7 = input_ffmpeg_sub7['s']
+    input_subtitles8 = input_ffmpeg_sub8['s']
+
+
+
+    output_ffmpeg = ffmpeg.output(
+
+        input_video, input_audio, input_subtitles1,input_subtitles2, 
+        input_subtitles3,input_subtitles4, 
+        input_subtitles5,input_subtitles6,
+        input_subtitles7,input_subtitles8, 
+        output_file,
+        vcodec='copy', acodec='copy', 
+        **{'metadata:s:s:0': "language="+l1,
+           'metadata:s:s:0': "title="+t1,
+           'metadata:s:s:1': "language="+l2,
+           'metadata:s:s:1': "title="+t2,
+           'metadata:s:s:2': "language="+l3,
+           'metadata:s:s:2': "title="+t3,
+           'metadata:s:s:3': "language="+l4,
+           'metadata:s:s:3': "title="+t4,
+           'metadata:s:s:4': "language="+l5,
+           'metadata:s:s:4': "title="+t5,
+           'metadata:s:s:5': "language="+l6,
+           'metadata:s:s:5': "title="+t6,
+           'metadata:s:s:6': "language="+l7,
+           'metadata:s:s:6': "title="+t7,
+           'metadata:s:s:7': "language="+l8,
+           'metadata:s:s:7': "title="+t8
+          }
+    )
+
+    # If the destination file already exists, overwrite it.
+    output_ffmpeg = ffmpeg.overwrite_output(output_ffmpeg)
+
+    # Print the equivalent ffmpeg command we could run to perform the same action as above.
+    print(ffmpeg.compile(output_ffmpeg))
+    with open(log_file, "a") as log:
+        log.write(f"combining all subtitles \n")
+
+
+    # Do it! transcode!
+    ffmpeg.run(output_ffmpeg)
+
 
 
 
 # import argostranslate.translate
-
+# not used in project (replaced)
 def get_subs_fa(audio_directory, output_file):
   segments = sorted([f for f in Path(audio_directory).glob(f'temp_*.wav')])
   line_count = 0
@@ -488,59 +701,17 @@ def get_subs_fa(audio_directory, output_file):
 
 
 
-# def log_sender(data):
-#     socketio.emit('log',{'log':data})
-
-
-
-#import argostranslate.translate
-
-# def get_subs_fa_en_optimized(audio_directory, output_file1 ,output_file2):
-#     global temp_str
-#     segments = sorted([f for f in Path(audio_directory).glob(f'temp_*.wav')])
-#     line_count = 0
-#     from_code = "en"
-#     to_code = "fa"
-#     with open(output_file1, 'w', encoding="utf-8") as out_file1:
-#         with open(output_file2,'w',encoding="utf-8") as out_file2:
-#             for audio_file in segments:
-#                 # Run OpenAI Whisper inference on each segemented audio file.
-#                 speech, rate = soundfile.read(audio_file) 
-#                 output_json = pipe(speech)
-#                 inferred_text = output_json['text']
-
-#                 if len(inferred_text) > 0:
-#                     inferred_text = clean_text(inferred_text)
-#                     temp_str += inferred_text + "\n"
-                    
-#                     print(inferred_text)
-#                     translatedText = argostranslate.translate.translate(inferred_text, from_code, to_code)
-#                     temp_str += translatedText + "\n"
-#                     print(translatedText)
-#                 else:
-#                     inferred_text = ''
-#                     translatedText= ''
-#                     temp_str += '.' + '\n'
-
-                
-#                 limits = audio_file.name[:-4].split("_")[-1].split("-")
-#                 limits = [float(limit) for limit in limits]
-#                 out_file1.write(get_srt_line(translatedText, line_count, limits))
-#                 out_file1.flush()
-#                 out_file2.write(get_srt_line(inferred_text , line_count, limits))
-#                 out_file2.flush()
-#                 line_count += 1
-#                 # yield temp_str
 
 
 
 
 
-
-# TODO bring newer version from whisper.py that i wrote
-
+# hardencode the subtitle to the video
 def combine_subtitles(input_file,  subtitle_file, output_file):
   command = ["ffmpeg", "-i", input_file, "-vf", f"subtitles={subtitle_file}", output_file]
+  with open(log_file, "a") as log:
+        log.write(f"creating hardcoded english-subbed mkv file \n")
+
   subprocess.run(command)
 
 
@@ -553,6 +724,9 @@ def combine_subtitles_mkv(input_file,  subtitle_file, output_file):
     l1="en"
     t1="English"
     output_file=output_file
+    with open(log_file, "a") as log:
+        log.write(f"creating mkv file with english sub \n")
+
 
     #Define input values
     input_ffmpeg = ffmpeg.input(input_file)
@@ -588,6 +762,8 @@ def combine_subtitles_mkv_fa(input_file,  subtitle_file1 , subtitle_file2 , outp
     l2="fa"
     t2="Farsi"
     output_file=output_file
+    with open(log_file, "a") as log:
+        log.write(f"creating mkv file with farsi sub \n")
 
     #Define input values
     input_ffmpeg = ffmpeg.input(input_file)
@@ -620,6 +796,9 @@ def combine_subtitles_mkv_fa(input_file,  subtitle_file1 , subtitle_file2 , outp
 # import os 
 def temp_cleaner():
     segments = [f for f in Path(audio_directory).glob(f'temp*.wav')]
+    with open(log_file, "a") as log:
+        log.write(f"cleaning temp \n")
+
     
     for i in segments:
         os.remove(i)
@@ -627,99 +806,20 @@ def temp_cleaner():
 
 def downloads_cleaner():
     segments = [f for f in Path(download_directory).glob(f'*.*')]
+    with open(log_file, "a") as log:
+        log.write(f"cleaning download files\n")
+
     
+    for i in segments:
+        os.remove(i)
+def uploads_cleaner():
+    segments = [f for f in Path(upload_directory).glob(f'*.*')]
+    with open(log_file, "a") as log:
+        log.write(f"cleaning uploaded files\n")
+
     for i in segments:
         os.remove(i)
 
 
 
 
-"""
-#Define vars
-video="input.mp4"
-sub1="subs/en/en_srt_sub.srt"
-l1="en"
-t1="English"
-sub2="subs/fr/fr_srt_sub.srt"
-l2="fr"
-t2="French"
-output_file="output.mkv"
-
-#Define input values
-input_ffmpeg = ffmpeg.input(video)
-input_ffmpeg_sub1 = ffmpeg.input(sub1)
-input_ffmpeg_sub2 = ffmpeg.input(sub2)
-
-#Define output file
-input_video = input_ffmpeg['v']
-input_audio = input_ffmpeg['a']
-input_subtitles1 = input_ffmpeg_sub1['s']
-input_subtitles2 = input_ffmpeg_sub['s']
-output_ffmpeg = ffmpeg.output(
-    input_video, input_audio, input_subtitles1, input_subtitles2, output_file,
-    vcodec='copy', acodec='copy', 
-    **{'metadata:s:s:0': "language="+l1, 'metadata:s:s:0': "title="+t1, 'metadata:s:s:1': "language="+l2, 'metadata:s:s:1': "title="+t2 }
-)
-
-# If the destination file already exists, overwrite it.
-output_ffmpeg = ffmpeg.overwrite_output(output_ffmpeg)
-
-# Print the equivalent ffmpeg command we could run to perform the same action as above.
-print(ffmpeg.compile(output_ffmpeg))
-
-# Do it! transcode!
-ffmpeg.run(output_ffmpeg)
-"""
-
-
-
-"""
-import argostranslate.package
-import argostranslate.translate
-
-from_code = "en"
-to_code = "es"
-
-# Download and install Argos Translate package
-argostranslate.package.update_package_index()
-available_packages = argostranslate.package.get_available_packages()
-package_to_install = next(
-    filter(
-        lambda x: x.from_code == from_code and x.to_code == to_code, available_packages
-    )
-)
-argostranslate.package.install_from_path(package_to_install.download())
-
-# Translate
-translatedText = argostranslate.translate.translate("Hello World", from_code, to_code)
-print(translatedText)
-# '¡Hola Mundo!'
-"""
-
-
-
-
-# exit()
-# os.chdir("..")
-# with open('./uploads/{temp_str}','r') as f:
-
-# print(f"\n./uploads/{temp_str}\n")
-# print(f"\n{video}\n")
-# #video = f"./uploads/{temp_str}"
-# #os.chdir("..")
-# print(os.getcwd())
-# audio_directory = './temp_audio/'
-
-# temp_cleaner()
-# extract_audio(video)
-# segment_audio(audio_directory+'/temp.wav')
-
-# segments = [f for f in Path(audio_directory).glob(f'temp_*.wav')]
-# #pipe would be used to extract the infered text
-# pipe = model_select(model_name='base')
-# #get_subs(audio_directory, './video_en.srt')
-# #get_subs_fa(audio_directory, './video_fa.srt')
-# get_subs_fa_en_optimized(audio_directory, './video_fa.srt', './video_en.srt')
-# #temp_cleaner()
-# combine_subtitles_mkv(video, "./video_en.srt", './video_subbed_en.mkv')
-# combine_subtitles_mkv_fa(video,"./video_en.srt",'./video_fa.srt','./video_subbed_en_fa.mkv')

@@ -3,16 +3,25 @@ from flask import jsonify
 from functions import *
 # combine_subtitles('./video.mp4', './video_en.srt', './video_subbed_en.mp4')
 # combine_subtitles('./video.mp4', './video_fa.srt', './video_subbed_en_fa.mp4')
+from watchfiles import awatch
+import asyncio
+import threading
+from threading import Timer
+import time
 
 import os
 from flask import Flask, render_template, request
 from flask_dropzone import Dropzone
 from flask_socketio import SocketIO
+# import socketio as SocketIO
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.config['DEBUG'] = True
-from functions import temp_str
+# app.async_to_sync(func)
+# from functions import temp_str
+log_file = 'log.txt'
+
 
 
 download_directory = './downloads/'
@@ -29,6 +38,7 @@ app.config.update(
     DROPZONE_MAX_FILE_SIZE=4096,  # set max size limit to a large number, here is 1024 MB
     # set upload timeout to a large number, here is 5 minutes
     DROPZONE_TIMEOUT=20 * 60 * 1000,
+    
     DROPZONE_MAX_FILES=1,
     DROPZONE_ALLOWED_FILE_CUSTOM=True,
     DROPZONE_ALLOWED_FILE_TYPE='audio/* , video/*, .mp4 , .mkv , .mp3, .wav'
@@ -36,66 +46,44 @@ app.config.update(
 )
 
 dropzone = Dropzone(app)
-socketio = SocketIO(app,cors_allowed_origins="*")
+socketio = SocketIO(app,cors_allowed_origins="*", async_mode='threading')
+# import eventlet
+# eventlet.monkey_patch()
 
 # global done value
 done = False
 
+def read_log():
+    with open("log.txt", "r") as f:
+        SMRF1 = f.readlines()
+    return SMRF1
+
+
+
+initial = read_log()
+
+
 @socketio.on('connect')
 def connect():
     print('Client connected')
-
-
-
-def get_subs_fa_en_optimized(audio_directory, output_file1 ,output_file2):
-    global temp_str
-    segments = sorted([f for f in Path(audio_directory).glob(f'temp_*.wav')])
-    line_count = 0
-    from_code = "en"
-    to_code = "fa"
-    with open(output_file1, 'w', encoding="utf-8") as out_file1:
-        with open(output_file2,'w',encoding="utf-8") as out_file2:
-            for audio_file in segments:
-                # Run OpenAI Whisper inference on each segemented audio file.
-                speech, rate = soundfile.read(audio_file) 
-                output_json = pipe(speech)
-                inferred_text = output_json['text']
-
-                if len(inferred_text) > 0:
-                    inferred_text = clean_text(inferred_text)
-                    temp_str += inferred_text + "\n"
-                    
-                    print(inferred_text)
-                    translatedText = argostranslate.translate.translate(inferred_text, from_code, to_code)
-                    temp_str += translatedText + "\n"
-                    print(translatedText)
-                else:
-                    inferred_text = ''
-                    translatedText= ''
-                    temp_str += '.' + '\n'
-
-                log_sender(temp_str)
-                limits = audio_file.name[:-4].split("_")[-1].split("-")
-                log_sender(limits)
-                # temp_0002.000-0010.000
-                limits = [float(limit) for limit in limits]
-                out_file1.write(get_srt_line(translatedText, line_count, limits))
-                out_file1.flush()
-                out_file2.write(get_srt_line(inferred_text , line_count, limits))
-                out_file2.flush()
-                line_count += 1
-                # yield temp_str
+    with open(log_file, "a") as log:
+        log.write("clinet connected\n")
 
 
 @app.route('/done', methods=['GET', 'POST'])
 def done_check():
     dic = {"isdone": done}
     # TODO NOt necessary to use jsonify
+    with open(log_file, "a") as log:
+        log.write("the operation is done and files are ready\n")
     return jsonify(dic)
 
 
 @app.route('/mkv_en')  # this is a job for GET, not POST
 def mkv_en():
+    # with open(log_file, "a") as log:
+    #     log.write(f"preparing mkv_en for download  \n")
+
 
     return send_from_directory(
         directory=download_directory,
@@ -120,6 +108,15 @@ def mkv_en_fa():
         path=f"video_subbed_en_fa.mkv",
         as_attachment=True)
 
+@app.route('/mkv_all')  # this is a job for GET, not POST
+def mkv_all():
+
+    return send_from_directory(
+        directory=download_directory,
+        path=f"video_all_subs.mkv",
+        as_attachment=True)
+
+
 
 @app.route('/srt_en')  # this is a job for GET, not POST
 def srt_en():
@@ -138,12 +135,69 @@ def srt_fa():
         path=f"video_fa.srt",
         as_attachment=True)
 
+@app.route('/srt_fr')  # this is a job for GET, not POST
+def srt_fr():
+
+    return send_from_directory(
+        directory=download_directory,
+        path=f"video_fr.srt",
+        as_attachment=True)
+        
+@app.route('/srt_es')  # this is a job for GET, not POST
+def srt_es():
+
+    return send_from_directory(
+        directory=download_directory,
+        path=f"video_es.srt",
+        as_attachment=True)
+
+        
+@app.route('/srt_de')  # this is a job for GET, not POST
+def srt_de():
+
+    return send_from_directory(
+        directory=download_directory,
+        path=f"video_de.srt",
+        as_attachment=True)
+
+        
+@app.route('/srt_ru')  # this is a job for GET, not POST
+def srt_ru():
+
+    return send_from_directory(
+        directory=download_directory,
+        path=f"video_ru.srt",
+        as_attachment=True)
+
+        
+@app.route('/srt_ja')  # this is a job for GET, not POST
+def srt_ja():
+
+    return send_from_directory(
+        directory=download_directory,
+        path=f"video_ja.srt",
+        as_attachment=True)
+                
+@app.route('/srt_zh')  # this is a job for GET, not POST
+def srt_zh():
+
+    return send_from_directory(
+        directory=download_directory,
+        path=f"video_zh.srt",
+        as_attachment=True)
+
+
 
 @app.route('/', methods=['POST', 'GET'])
 def upload():
 
     global done 
+    # global temp_str
     if request.method == 'POST':
+
+        
+
+            
         isdone_sender(done)
         print(f"done ={done}")
         f = request.files.get('file')
@@ -165,36 +219,98 @@ def upload():
         
         get_subs(audio_directory, f'{download_directory}video_en.srt')
         translate_srt_fa(f'{download_directory}video_en.srt', f'{download_directory}video_fa.srt')
-        # get_subs_fa_en_optimized(audio_directory, f'{download_directory}video_fa.srt', f'{download_directory}video_en.srt')
+        translate_srt_fr(f'{download_directory}video_en.srt', f'{download_directory}video_fr.srt')
+        translate_srt_es(f'{download_directory}video_en.srt', f'{download_directory}video_es.srt')
+        translate_srt_de(f'{download_directory}video_en.srt', f'{download_directory}video_de.srt')
+        translate_srt_ru(f'{download_directory}video_en.srt', f'{download_directory}video_ru.srt')
+        translate_srt_ja(f'{download_directory}video_en.srt', f'{download_directory}video_ja.srt')
+        translate_srt_zh(f'{download_directory}video_en.srt', f'{download_directory}video_zh.srt')
         # print(log)
-        # log_sender(temp_str)
 
         combine_subtitles(video, f"{download_directory}video_en.srt", f'{download_directory}video_en_hard_encoded.mkv')
         combine_subtitles_mkv(video, f"{download_directory}video_en.srt", f'{download_directory}video_subbed_en.mkv')
         combine_subtitles_mkv_fa(video,f"{download_directory}video_en.srt",f'{download_directory}video_fa.srt',f'{download_directory}video_subbed_en_fa.mkv')
+        combine_subtitles_mkv_all(video, 
+                                  f"{download_directory}video_en.srt", 
+                                  f'{download_directory}video_fa.srt',
+                                  f"{download_directory}video_fr.srt", 
+                                  f'{download_directory}video_de.srt',
+                                  f"{download_directory}video_es.srt", 
+                                  f'{download_directory}video_ru.srt',
+                                  f"{download_directory}video_zh.srt", 
+                                  f'{download_directory}video_ja.srt',
+                                  f'{download_directory}video_all_subs.mkv')
 
+
+        with open(log_file, "r") as log:
+            temp_str_list =   [ l for l in log.readlines()]
+            temp_str = "\n".join(temp_str_list)
+            log_sender(temp_str)
         done = True
         isdone_sender(done)
+        
+             
     return render_template('index.html')
 
 def isdone_sender(data):
     
     # socketio.emit('log', {'log': temp_str })
     socketio.emit('isdone', {'isdone': data})
-    # socketio.emit('log', ":somthing")
-
-# def log_sender():
-#     global temp_str
-#     socketio.emit('log',{'log':temp_str})
+    with open(log_file, "a") as log:
+        log.write("the operation is done.\n")
 
 def log_sender(data):
     socketio.emit('log',{'log':data})
 
 
 
+
+async def on_log_change():
+    while True:
+        current = read_log()
+        global initial
+        if initial != current:
+            for line in current:
+                if line not in initial:
+                    print(f"change in log->  {line}")
+                    log_sender(line)
+            initial = current
+        await asyncio.sleep(1)
+
+def on_log_change_sync():
+    print("inside on_log_change_sync")
+    while True:
+        current = read_log()
+        global initial
+        if initial != current:
+            for line in current:
+                if line not in initial:
+                    print(f"change in log->  {line}")
+                    log_sender(line)
+            initial = current
+        # await asyncio.sleep(1)
+
+def stop():
+    task.cancel()
+
+def read_log():
+
+        with open("log.txt", "r") as f:
+            line_list = f.readlines()
+        return line_list
+    
+
+
+
+
 if __name__ == '__main__':
+
     import webbrowser
-    webbrowser.open("http://127.0.0.1:5000")
-    # app.run(debug=True)
-    socketio.run(app)
+    # webbrowser.open("http://127.0.0.1:5000")
+    socketio.start_background_task(webbrowser.open("http://127.0.0.1:5000"))
+
+    socketio.start_background_task(on_log_change_sync)
+    socketio.start_background_task(socketio.run(app)).join()
+
+
 
