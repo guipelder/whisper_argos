@@ -11,39 +11,39 @@ for installing the offline argos_translate packages
 # Note
 after installation the one of the whisper models should  
 be downloaded(multiple models could exist in `./openai/` directory)  
-in the following directory example:
-`
-openai/
-├── whisper-base
-│   ├── added_tokens.json
-│   ├── config.json
-│   ├── flax_model.msgpack
-│   ├── generation_config.json
-│   ├── merges.txt
-│   ├── normalizer.json
-│   ├── preprocessor_config.json
-│   ├── pytorch_model.bin
-│   ├── README.md
-│   ├── special_tokens_map.json
-│   ├── tf_model.h5
-│   ├── tokenizer_config.json
-│   ├── tokenizer.json
-│   └── vocab.json
-└── whisper-small
-    ├── added_tokens.json
-    ├── config.json
-    ├── flax_model.msgpack
-    ├── generation_config.json
-    ├── merges.txt
-    ├── normalizer.json
-    ├── preprocessor_config.json
-    ├── pytorch_model.bin
-    ├── README.md
-    ├── special_tokens_map.json
-    ├── tf_model.h5
-    ├── tokenizer_config.json
-    ├── tokenizer.json
-    └── vocab.json
+in the following directory example:  
+`  
+openai/  
+├── whisper-base  
+│   ├── added_tokens.json  
+│   ├── config.json  
+│   ├── flax_model.msgpack  
+│   ├── generation_config.json  
+│   ├── merges.txt  
+│   ├── normalizer.json  
+│   ├── preprocessor_config.json  
+│   ├── pytorch_model.bin  
+│   ├── README.md  
+│   ├── special_tokens_map.json  
+│   ├── tf_model.h5  
+│   ├── tokenizer_config.json  
+│   ├── tokenizer.json  
+│   └── vocab.json  
+└── whisper-small  
+    ├── added_tokens.json  
+    ├── config.json  
+    ├── flax_model.msgpack  
+    ├── generation_config.json  
+    ├── merges.txt  
+    ├── normalizer.json  
+    ├── preprocessor_config.json  
+    ├── pytorch_model.bin  
+    ├── README.md  
+    ├── special_tokens_map.json  
+    ├── tf_model.h5  
+    ├── tokenizer_config.json  
+    ├── tokenizer.json  
+    └── vocab.json  
 `  
 `tiny` whisper model is the smallest pretrained model.    
 you can download other ones and put them inside `./openai/`  
