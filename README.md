@@ -63,6 +63,5 @@ and the put it in the line after `model_select` function as follow:
         		return   pipeline("automatic-speech-recognition", model="openai/whisper-small")
   	`
   	`pipe = model_select(model_name='small')`  
-if you downloaded the small model    
 i.e the small model link is https://huggingface.co/openai/whisper-small
 
