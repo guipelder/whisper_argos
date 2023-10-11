@@ -47,11 +47,13 @@ openai/
  
 `tiny` whisper model is the smallest pretrained model.    
 you can download other ones and put them inside `./openai/`  
-folder if you one to use another one and also   
-( select the model in model_select function in functions.py  
-  and the put it in the line after `model_select` function as follow:
+folder if you one to use another one, and also   
+select the model in model_select function in functions.py  
+and the put it in the line after `model_select` function as follow:
       
-	`def model_select(model_name):
+	`
+	#i.e if you downloaded the small model
+	def model_select(model_name):
 		.
 		.
 		.
@@ -61,7 +63,6 @@ folder if you one to use another one and also
         		return   pipeline("automatic-speech-recognition", model="openai/whisper-small")
   	`
   	`pipe = model_select(model_name='small')`  
-  if you downloaded the small model  
-)  
+if you downloaded the small model    
 i.e the small model link is https://huggingface.co/openai/whisper-small
 
