@@ -12,7 +12,7 @@ for installing the offline argos_translate packages
 after installation the one of the whisper models should  
 be downloaded(multiple models could exist in `./openai/` directory)  
 in the following directory example:  
-`  
+  
 openai/  
 ├── whisper-base  
 │   ├── added_tokens.json  
@@ -44,7 +44,7 @@ openai/
     ├── tokenizer_config.json  
     ├── tokenizer.json  
     └── vocab.json  
-`  
+ 
 `tiny` whisper model is the smallest pretrained model.    
 you can download other ones and put them inside `./openai/`  
 folder if you one to use another one and also   
