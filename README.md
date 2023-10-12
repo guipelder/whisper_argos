@@ -7,6 +7,40 @@ for installing the requirements
 `python3 argos_setup.py`   
 for installing the offline argos_translate packages  
 (note: either this or you can install the packages online)
+the packages that are used originally are as following:
+
+
+`
+translate-en_fa-1_5.argosmodel
+en_fr.argosmodel
+en_es.argosmodel
+translate-en_zh-1_1.argosmodel
+translate-en_de-1_5.argosmodel
+translate-en_ru-1_7.argosmodel
+translate-en_ja-1_1.argosmodel
+
+
+`
+and their link are as follows:
+`
+https://pub-dbae765fb25a4114aac1c88b90e94178.r2.dev/v1/translate-en_fa-1_5.argosmodel
+https://pub-dbae765fb25a4114aac1c88b90e94178.r2.dev/v1/translate-en_fr-1_0.argosmodel
+https://pub-dbae765fb25a4114aac1c88b90e94178.r2.dev/v1/translate-en_es-1_0.argosmodel
+https://pub-dbae765fb25a4114aac1c88b90e94178.r2.dev/v1/translate-en_zh-1_7.argosmodel
+https://pub-dbae765fb25a4114aac1c88b90e94178.r2.dev/v1/translate-en_de-1_0.argosmodel
+https://pub-dbae765fb25a4114aac1c88b90e94178.r2.dev/v1/translate-en_ru-1_7.argosmodel
+https://pub-dbae765fb25a4114aac1c88b90e94178.r2.dev/v1/translate-en_ja-1_1.argosmodel
+
+`
+links to all packages:  
+https://www.argosopentech.com/argospm/index/
+https://drive.google.com/drive/folders/11wxM3Ze7NCgOk_tdtRjwet10DmtvFu3i
+
+## Note
+do consider that file names could change according to there versioning, 
+if you got diffrent version's from above either you need to change   
+the `argos_setup.py` file or install them manually. 
+
 
 # Note
 after installation the one of the whisper models should  
