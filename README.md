@@ -2,9 +2,11 @@
 this project is about transcribing the english video files  
 and creating english subtitile and the translating and  
 adding other subtitles in other languages as subtitle
-to the video file.the main Two repositories:  
+to the video file.  
+the main Two repositories:  
 - https://github.com/argosopentech/argos-translate  
 - https://github.com/openai/whisper  
+  
 the supported languages are:  
 - English
 - Spanish
