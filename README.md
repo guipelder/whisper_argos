@@ -11,7 +11,7 @@ to the video file. the supported languages are:
 - Chinese
 - Japanese
 - Persian
-
+![image](https://github.com/guipelder/whisper_argos/assets/79325164/0efd80d2-09e4-4bc8-86fb-2d788135a56c)
 
 # Installation
 1.run the command below:  
