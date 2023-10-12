@@ -10,8 +10,10 @@ to the video file. the supported languages are:
 - Russian
 - Chinese
 - Japanese
-- Persian
-![image](https://github.com/guipelder/whisper_argos/assets/79325164/0efd80d2-09e4-4bc8-86fb-2d788135a56c)
+- Persian  
+
+![image](https://github.com/guipelder/whisper_argos/assets/79325164/0efd80d2-09e4-4bc8-86fb-2d788135a56c)  
+  
 
 # Installation
 1.run the command below:  
@@ -23,7 +25,6 @@ for installing the requirements
 for installing the offline argos_translate packages  
 (note: either this or you can install the packages online)
 the packages that are used originally are as following:
-
 
   
 - translate-en_fa-1_5.argosmodel  
@@ -48,9 +49,9 @@ links to all packages:
 - https://www.argosopentech.com/argospm/index/  
 - https://drive.google.com/drive/folders/11wxM3Ze7NCgOk_tdtRjwet10DmtvFu3i
 
-## after downloading models
+## After Downloading Models
 
-do consider that file names could change according to there versioning, 
+do consider that file model names could change based to there versioning, 
 if you got diffrent version's from above either you need to change   
 the `argos_setup.py` file or install them manually. 
 you need to put the files inside the `argos_packages_offline`
@@ -66,7 +67,7 @@ argos_packages_offline/
 ├── translate-en_ru-1_7.argosmodel
 └── translate-en_zh-1_1.argosmodel
 
-# Note
+# OpenAI Whisper
 after installation the one of the whisper models should  
 be downloaded(multiple models could exist in `./openai/` directory)  
 in the following directory example:  
@@ -121,5 +122,15 @@ and the put it in the line after `model_select` function as follow:
         		return   pipeline("automatic-speech-recognition", model="openai/whisper-small")
 `
   	`pipe = model_select(model_name='small')`  
-i.e the small model link is https://huggingface.co/openai/whisper-small
+i.e the small model link is https://huggingface.co/openai/whisper-small  
 
+
+## Docker
+for using  Docker, `build` and `run` commands should
+run after the `argos_translate` and `whisper` models 
+have been downloaded in their directories.
+
+#Bugs
+logs won't be shown in docker webpage,  
+due to ip problem.
+ 
