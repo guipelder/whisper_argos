@@ -1,3 +1,18 @@
+# Introduction
+this project is about transcribing the english video files  
+and creating english subtitile and the translating and  
+adding other subtitles in other languages as subtitle
+to the video file. the supported languages are:  
+- English
+- Spanish
+- French
+- German
+- Russian
+- Chinese
+- Japanese
+- Persian
+
+
 # Installation
 1.run the command below:  
 `pip install -r requirements.txt`  
@@ -33,11 +48,23 @@ links to all packages:
 - https://www.argosopentech.com/argospm/index/  
 - https://drive.google.com/drive/folders/11wxM3Ze7NCgOk_tdtRjwet10DmtvFu3i
 
-## Note
+## after downloading models
+
 do consider that file names could change according to there versioning, 
 if you got diffrent version's from above either you need to change   
 the `argos_setup.py` file or install them manually. 
+you need to put the files inside the `argos_packages_offline`
+directory like the following structure:   
 
+argos_packages_offline/
+├── en_ar.argosmodel
+├── en_es.argosmodel
+├── en_fr.argosmodel
+├── translate-en_de-1_5.argosmodel
+├── translate-en_fa-1_5.argosmodel
+├── translate-en_ja-1_1.argosmodel
+├── translate-en_ru-1_7.argosmodel
+└── translate-en_zh-1_1.argosmodel
 
 # Note
 after installation the one of the whisper models should  
