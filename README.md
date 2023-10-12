@@ -2,7 +2,10 @@
 this project is about transcribing the english video files  
 and creating english subtitile and the translating and  
 adding other subtitles in other languages as subtitle
-to the video file. the supported languages are:  
+to the video file.the main Two repositories:  
+- https://github.com/argosopentech/argos-translate  
+- https://github.com/openai/whisper  
+the supported languages are:  
 - English
 - Spanish
 - French
@@ -10,7 +13,8 @@ to the video file. the supported languages are:
 - Russian
 - Chinese
 - Japanese
-- Persian  
+- Persian
+  
 
 ![image](https://github.com/guipelder/whisper_argos/assets/79325164/0efd80d2-09e4-4bc8-86fb-2d788135a56c)  
   
