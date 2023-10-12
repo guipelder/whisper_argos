@@ -56,16 +56,17 @@ if you got diffrent version's from above either you need to change
 the `argos_setup.py` file or install them manually. 
 you need to put the files inside the `argos_packages_offline`
 directory like the following structure:   
-
-argos_packages_offline/
-├── en_ar.argosmodel
-├── en_es.argosmodel
-├── en_fr.argosmodel
-├── translate-en_de-1_5.argosmodel
-├── translate-en_fa-1_5.argosmodel
-├── translate-en_ja-1_1.argosmodel
-├── translate-en_ru-1_7.argosmodel
-└── translate-en_zh-1_1.argosmodel
+  
+argos_packages_offline/  
+├── en_ar.argosmodel  
+├── en_es.argosmodel  
+├── en_fr.argosmodel  
+├── translate-en_de-1_5.argosmodel  
+├── translate-en_fa-1_5.argosmodel  
+├── translate-en_ja-1_1.argosmodel  
+├── translate-en_ru-1_7.argosmodel  
+└── translate-en_zh-1_1.argosmodel  
+  
 
 # OpenAI Whisper
 after installation the one of the whisper models should  
