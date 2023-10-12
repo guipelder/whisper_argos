@@ -130,7 +130,7 @@ for using  Docker, `build` and `run` commands should
 run after the `argos_translate` and `whisper` models 
 have been downloaded in their directories.
 
-#Bugs
+# Bugs
 logs won't be shown in docker webpage,  
 due to ip problem.
  
