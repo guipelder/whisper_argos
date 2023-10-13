@@ -118,15 +118,15 @@ select the model in model_select function in functions.py
 and the put it in the line after `model_select` function as follow:
       
 `
-	#i.e if you downloaded the small model
-	def model_select(model_name):
-		.
-		.
-		.
-	 	if(model_name == 'small'):
-        		with open(log_file, "a") as log:
-            		log.write("using small model\n")
-        		return   pipeline("automatic-speech-recognition", model="openai/whisper-small")
+	#i.e if you downloaded the small model  
+	def model_select(model_name):  
+		.  
+		.  
+		.  
+	 	if(model_name == 'small'):  
+        		with open(log_file, "a") as log:  
+            		log.write("using small model\n")  
+        		return   pipeline("automatic-speech-recognition", model="openai/whisper-small")  
 `
   	`pipe = model_select(model_name='small')`  
 i.e the small model link is https://huggingface.co/openai/whisper-small  
