@@ -55,7 +55,7 @@ try:
 except:
     #install french
     print("installing the offline model")
-    argostranslate.package.install_from_path('./argos_packages_offline/en_fr.argosmodel')
+    argostranslate.package.install_from_path('./argos_packages_offline/translate-en_fr-1_0.argosmodel')
     translatedText = argostranslate.translate.translate("Hello World", from_code, to_code)
     print(translatedText)
 
@@ -69,7 +69,7 @@ try:
 except:
     #install espaniol
     print("installing the offline model")
-    argostranslate.package.install_from_path('./argos_packages_offline/en_es.argosmodel')
+    argostranslate.package.install_from_path('./argos_packages_offline/translate-en_es-1_0.argosmodel')
     translatedText = argostranslate.translate.translate("Hello World", from_code, to_code)
     print(translatedText)
 
@@ -82,7 +82,7 @@ try:
 except:
     #install chinease
     print("installing the offline model")
-    argostranslate.package.install_from_path('./argos_packages_offline/translate-en_zh-1_1.argosmodel')
+    argostranslate.package.install_from_path('./argos_packages_offline/translate-en_zh-1_7.argosmodel')
     translatedText = argostranslate.translate.translate("Hello World", from_code, to_code)
     print(translatedText)
 
@@ -97,7 +97,7 @@ try:
 except:
     #install german
     print("installing the offline model")
-    argostranslate.package.install_from_path('./argos_packages_offline/translate-en_de-1_5.argosmodel')
+    argostranslate.package.install_from_path('./argos_packages_offline/translate-en_de-1_0.argosmodel')
     translatedText = argostranslate.translate.translate("Hello World", from_code, to_code)
     print(translatedText)
 
@@ -132,7 +132,7 @@ except:
     translatedText = argostranslate.translate.translate("Hello World", from_code, to_code)
     print(translatedText)
 
- 
+  
 
 #import argostranslate.package
 #import argostranslate.translate
