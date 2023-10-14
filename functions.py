@@ -6,14 +6,12 @@ import argostranslate.translate
 import gc
 import subprocess
 from pathlib import Path
-#from IPython.display import Audio, display
 import auditok
 import soundfile
 import re
 import torch
 import datetime
 import os
-# from testwhisper import log_sender
 
 from flask import Flask, render_template, request
 from flask_dropzone import Dropzone
@@ -38,7 +36,6 @@ temp_str  =""
 # from pathlib import Path
 
 # audio_directory = './temp_audio/'
-#TODO changin the extract_audio function to use internal ffmpeg-python
 def extract_audio(input_file):
     Path(audio_directory).mkdir(parents=True, exist_ok=True)
     audio_file = audio_directory+'/temp.wav'
@@ -56,7 +53,6 @@ def extract_audio(input_file):
 #This is useful for subtitling as we then have splits by the segments for each subtitle caption to be shown. 
 #We also ensure that the max duration of each audio segment is not too long (less than 8s),
 #so that the subtitle for each segment is readable.
-# We `display` the first segement as an audio player in the notebook to listen.
 
 # import auditok
 def segment_audio(audio_name):
@@ -93,11 +89,8 @@ def segment_audio(audio_name):
 # 
 # We download and load the [OpenAI Whisper Base](https://huggingface.co/openai/whisper-base) model using the convenience pipeline function in the library.
 
-#TODO making a function to choose between small and base inference model
 
-# from transformers import pipeline
 
-# pipe = pipeline("automatic-speech-recognition", model="openai/whisper-base")
 
 def model_select(model_name):
     """
@@ -256,7 +249,6 @@ def translate_srt_fa( input_file ,output_file):
                         out_file.flush()
 
 
-#TODO trying to translate from srt_en directly
 def translate_srt_fr( input_file ,output_file):
             with open(log_file, "a") as log:
                 log.write(f"translating from english to  french subs ... \n")
@@ -308,7 +300,6 @@ def translate_srt_fr( input_file ,output_file):
                         out_file.write(translatedText)
                         out_file.flush()
 
-#TODO trying to translate from srt_en directly
 def translate_srt_es( input_file ,output_file):
             with open(log_file, "a") as log:
                 log.write(f"translating from english to  spanish subs ... \n")
@@ -359,7 +350,6 @@ def translate_srt_es( input_file ,output_file):
                         out_file.write(translatedText)
                         out_file.flush()
 
-#TODO trying to translate from srt_en directly
 def translate_srt_de( input_file ,output_file):
             with open(log_file, "a") as log:
                 log.write(f"translating from english to  german subs ... \n")
@@ -411,7 +401,6 @@ def translate_srt_de( input_file ,output_file):
                         out_file.flush()
 
 
-#TODO trying to translate from srt_en directly
 def translate_srt_zh( input_file ,output_file):
             with open(log_file, "a") as log:
                 log.write(f"translating from english to  chinese subs ... \n")
@@ -462,7 +451,6 @@ def translate_srt_zh( input_file ,output_file):
                         out_file.write(translatedText)
                         out_file.flush()
 
-#TODO trying to translate from srt_en directly
 def translate_srt_ru( input_file ,output_file):
             with open(log_file, "a") as log:
                 log.write(f"translating from english to  russian subs ... \n")
@@ -513,7 +501,6 @@ def translate_srt_ru( input_file ,output_file):
                         out_file.write(translatedText)
                         out_file.flush()
 
-#TODO trying to translate from srt_en directly
 def translate_srt_ja( input_file ,output_file):
             with open(log_file, "a") as log:
                 log.write(f"translating from english to  japenease subs ... \n")
