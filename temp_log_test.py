@@ -1,3 +1,10 @@
+"""
+this file is for testing the log.txt functionality
+after running you need to open the log.txt and 
+add some lines to it 
+the watch the terminal for seeing the log change
+"""
+
 import asyncio
 
 def read_log():
@@ -25,8 +32,6 @@ def stop():
     task.cancel()
 
 try:
-#    loop = asyncio.new_event_loop()
-#    asyncio.set_event_loop(loop)
     loop = asyncio.get_event_loop()
 except RuntimeError as e:
     if str(e).startswith('There is no current event loop'):
@@ -37,7 +42,6 @@ except RuntimeError as e:
 
 task = loop.create_task(on_log_change())
     
-#loop.call_later(5, stop)
    
 try:
     loop.run_until_complete(task)
