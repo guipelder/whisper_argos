@@ -147,7 +147,4 @@ command sample if you want to build and run docker:
 and the open: 
 `http://127.0.0.1:5000`  
 
-# Bugs
-logs won't be shown in docker webpage,  
-due to ip problem.
- 
+
