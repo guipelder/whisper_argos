@@ -2,23 +2,17 @@ from flask import send_file, send_from_directory
 from flask import jsonify
 from functions import *
 
-# from watchfiles import awatch
 import asyncio
 import threading
-# from threading import Timer
-# import time
 
 import os
 from flask import Flask, render_template, request
 from flask_dropzone import Dropzone
 from flask_socketio import SocketIO
-# import socketio as SocketIO
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.config['DEBUG'] = False
-# app.async_to_sync(func)
-# from functions import temp_str
 log_file = 'log.txt'
 
 
@@ -26,9 +20,6 @@ log_file = 'log.txt'
 download_directory = './downloads/'
 audio_directory = './temp_audio/'
 video = "not changed"
-# temp_str = ""
-# from flask import Flask, render_template, request
-# from flask_dropzone import Dropzone
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config.update(
@@ -46,10 +37,6 @@ app.config.update(
 
 dropzone = Dropzone(app)
 socketio = SocketIO(app,cors_allowed_origins="*", async_mode='threading')
-# import eventlet
-# eventlet.monkey_patch()
-
-# global done value
 done = False
 
 def read_log():
@@ -193,7 +180,6 @@ def srt_zh():
 def upload():
 
     global done 
-    # global temp_str
     if request.method == 'POST':
 
         
@@ -257,7 +243,6 @@ def upload():
 
 def isdone_sender(data):
     
-    # socketio.emit('log', {'log': temp_str })
     socketio.emit('isdone', {'isdone': data})
     with open(log_file, "a") as log:
         log.write("the operation is done.\n")
@@ -291,7 +276,6 @@ def on_log_change_sync():
                     print(f"change in log->  {line}")
                     log_sender(line)
             initial = current
-        # await asyncio.sleep(1)
 
 def stop():
     task.cancel()
