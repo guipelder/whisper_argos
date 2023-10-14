@@ -141,6 +141,11 @@ and put it in `cmd_test.py` directory.
 for using  Docker, `build` and `run` commands should
 run after the `argos_translate` and `whisper` models 
 have been downloaded in their directories.
+command sample if you  :  
+`docker build -t argos_whisper:latest`  
+`docker run --network="host" argos_whisper:latest `  
+and the open: 
+`127.0.0.1:5000`  
 
 # Bugs
 logs won't be shown in docker webpage,  
