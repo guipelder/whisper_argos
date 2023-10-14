@@ -34,10 +34,10 @@ the packages that are used originally are as following:
 
   
 - translate-en_fa-1_5.argosmodel  
-- en_fr.argosmodel  
-- en_es.argosmodel  
-- translate-en_zh-1_1.argosmodel  
-- translate-en_de-1_5.argosmodel  
+- translate-en_fr-1_0.argosmodel
+- translate-en_es-1_0.argosmodel  
+- translate-en_zh-1_7.argosmodel  
+- translate-en_de-1_0.argosmodel  
 - translate-en_ru-1_7.argosmodel  
 - translate-en_ja-1_1.argosmodel
   
@@ -131,6 +131,11 @@ and the put it in the line after `model_select` function as follow:
   	`pipe = model_select(model_name='small')`  
 i.e the small model link is https://huggingface.co/openai/whisper-small  
 
+## cmd_test.py
+if you want to use `cmd_test.py` , after downloading and  
+setting up the models, you need to rename your video file to `video.mkv`  
+and put it in `cmd_test.py` directory.  
+(`cmd_test.py` is for quick test)
 
 ## Docker
 for using  Docker, `build` and `run` commands should
