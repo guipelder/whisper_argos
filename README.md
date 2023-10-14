@@ -145,7 +145,7 @@ command sample if you want to build and run docker:
 `docker build -t argos_whisper:latest`  
 `docker run --network="host" argos_whisper:latest `  
 and the open: 
-`127.0.0.1:5000`  
+`http://127.0.0.1:5000`  
 
 # Bugs
 logs won't be shown in docker webpage,  
