@@ -36,7 +36,6 @@ from flask_dropzone import Dropzone
 # from pathlib import Path
 
 # audio_directory = './temp_audio/'
-#TODO changin the extract_audio function to use internal ffmpeg-python
 def extract_audio(input_file):
   Path(audio_directory).mkdir(parents=True, exist_ok=True)
   audio_file = audio_directory+'/temp.wav'
@@ -49,8 +48,6 @@ def extract_audio(input_file):
 # 
 # We `display` the first segement as an audio player in the notebook to listen.
 # import auditok
-#
-#split(input, min_dur=0.2, max_dur=5, max_silence=0.3, drop_trailing_silence=False, strict_min_dur=False, **kwargs)
 def segment_audio(audio_name):
     audio_regions = auditok.split(audio_name,
     #min_dur=0.1,       # minimum duration of a valid audio in seconds
@@ -80,11 +77,10 @@ def segment_audio(audio_name):
 # 
 # We download and load the [OpenAI Whisper Base](https://huggingface.co/openai/whisper-base) model using the convenience pipeline function in the library.
 
-# making a function to choose between small and base inference model
+# making a function to choose between small and base inference model  or other models
 
 # from transformers import pipeline
 
-# pipe = pipeline("automatic-speech-recognition", model="openai/whisper-base")
 
 def model_select(model_name):
     if(model_name == 'small'):
@@ -147,73 +143,6 @@ def get_subs(audio_directory, output_file):
       out_file.write(get_srt_line(inferred_text, line_count, limits))
       out_file.flush()
       line_count += 1
-
-
-
-# import argostranslate.translate
-# TODO deleting this function
-def get_subs_fa(audio_directory, output_file):
-  segments = sorted([f for f in Path(audio_directory).glob(f'temp_*.wav')])
-  line_count = 0
-  from_code = "en"
-  to_code = "fa"
-  with open(output_file, 'w', encoding="utf-8") as out_file:
-    for audio_file in segments:
-      # Run OpenAI Whisper inference on each segemented audio file.
-      speech, rate = soundfile.read(audio_file) 
-      output_json = pipe(speech)
-      inferred_text = output_json['text']
-
-      if len(inferred_text) > 0:
-        inferred_text = clean_text(inferred_text)
-        print(inferred_text)
-        translatedText = argostranslate.translate.translate(inferred_text, from_code, to_code)
-        print(translatedText)
-      else:
-        inferred_text = ''
-        translatedText= ''
-
-      limits = audio_file.name[:-4].split("_")[-1].split("-")
-      limits = [float(limit) for limit in limits]
-      out_file.write(get_srt_line(translatedText, line_count, limits))
-      out_file.flush()
-      line_count += 1
-
-
-
-
-#import argostranslate.translate
-#bing replaced
-#TODO deleting the function
-def get_subs_fa_en_optimized(audio_directory, output_file1 ,output_file2):
-    segments = sorted([f for f in Path(audio_directory).glob(f'temp_*.wav')])
-    line_count = 0
-    from_code = "en"
-    to_code = "fa"
-    with open(output_file1, 'w', encoding="utf-8") as out_file1:
-        with open(output_file2,'w',encoding="utf-8") as out_file2:
-            for audio_file in segments:
-                # Run OpenAI Whisper inference on each segemented audio file.
-                speech, rate = soundfile.read(audio_file) 
-                output_json = pipe(speech)
-                inferred_text = output_json['text']
-
-                if len(inferred_text) > 0:
-                    inferred_text = clean_text(inferred_text)
-                    print(inferred_text)
-                    translatedText = argostranslate.translate.translate(inferred_text, from_code, to_code)
-                    print(translatedText)
-                else:
-                    inferred_text = ''
-                    translatedText= ''
-
-                limits = audio_file.name[:-4].split("_")[-1].split("-")
-                limits = [float(limit) for limit in limits]
-                out_file1.write(get_srt_line(translatedText, line_count, limits))
-                out_file1.flush()
-                out_file2.write(get_srt_line(inferred_text , line_count, limits))
-                out_file2.flush()
-                line_count += 1
 
 
 
@@ -303,7 +232,6 @@ def translate_srt_fr( input_file ,output_file):
                         out_file.write(translatedText)
                         out_file.flush()
 
-#TODO trying to translate from srt_en directly
 def translate_srt_es( input_file ,output_file):
             line_count = 1
             from_code = "en"
@@ -346,7 +274,6 @@ def translate_srt_es( input_file ,output_file):
                         out_file.write(translatedText)
                         out_file.flush()
 
-#TODO trying to translate from srt_en directly
 def translate_srt_de( input_file ,output_file):
             line_count = 1
             from_code = "en"
@@ -390,7 +317,6 @@ def translate_srt_de( input_file ,output_file):
                         out_file.flush()
 
 
-#TODO trying to translate from srt_en directly
 def translate_srt_zh( input_file ,output_file):
             line_count = 1
             from_code = "en"
@@ -433,7 +359,6 @@ def translate_srt_zh( input_file ,output_file):
                         out_file.write(translatedText)
                         out_file.flush()
 
-#TODO trying to translate from srt_en directly
 def translate_srt_ru( input_file ,output_file):
             line_count = 1
             from_code = "en"
@@ -476,7 +401,6 @@ def translate_srt_ru( input_file ,output_file):
                         out_file.write(translatedText)
                         out_file.flush()
 
-#TODO trying to translate from srt_en directly
 def translate_srt_ja( input_file ,output_file):
             line_count = 1
             from_code = "en"
@@ -706,33 +630,5 @@ combine_subtitles_mkv_all(video,"./video_en.srt",'./video_fa.srt',
                           './video_subbed_en_fa.mkv')
 
 
-
-#get_subs_fa(audio_directory, './video_fa.srt')
-#get_subs_fa_en_optimized(audio_directory, './video_fa.srt', './video_en.srt')
-
-# exit()  
-#os.chdir("..")
-#with open('./uploads/{temp_str}','r') as f:
-
-# print(f"\n./uploads/{temp_str}\n")
-# print(f"\n{video}\n")
-# #video = f"./uploads/{temp_str}"
-# #os.chdir("..")
-# print(os.getcwd())
-# audio_directory = './temp_audio/'
-
-# temp_cleaner()
-# extract_audio(video)
-# segment_audio(audio_directory+'/temp.wav')
-
-# segments = [f for f in Path(audio_directory).glob(f'temp_*.wav')]
-# #pipe would be used to extract the infered text
-# pipe = model_select(model_name='base')
-# #get_subs(audio_directory, './video_en.srt')
-# #get_subs_fa(audio_directory, './video_fa.srt')
-# get_subs_fa_en_optimized(audio_directory, './video_fa.srt', './video_en.srt')
-# #temp_cleaner()
-# combine_subtitles_mkv(video, "./video_en.srt", './video_subbed_en.mkv')
-# combine_subtitles_mkv_fa(video,"./video_en.srt",'./video_fa.srt','./video_subbed_en_fa.mkv')
 
 
